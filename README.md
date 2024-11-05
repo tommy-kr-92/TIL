@@ -1,8 +1,6 @@
-# Tommy's TIL
+# 2024-11-05
 
-## 2024-11-05
-
-### Enum 타입 Role의 캡슐화
+## Enum 타입 Role의 캡슐화
 
 ```java
 public enum UserRoleEnum {
@@ -119,3 +117,46 @@ UserRoleEnum role = UserRoleEnum.ADIMN; // 오타가 있으면 즉시 에러 표
 > ### 3. 실수를 방지할 수 있다.
 >
 > ### 4. 내부 구현 변경을 쉽게 할 수 있는 방법
+
+## ObjectMapper
+
+> ### Object Mapper란?
+
+Json 데이터와 Java 객체 간의 변환(직렬화/역직열화)을 담당하는 Jackson 라이브러리의 핵심 클래스
+
+> ### 사용하는 이유?
+
+-   Request Body의 JSON 데이터를 Java 객체로 자동 변환
+-   수동으로 파싱하는 복잡한 과정을 피할 수 있음
+-   타입 안정성 보장
+-   코드의 가독성과 유지 보수성 향상
+
+> ### Object Mapper를 사용하지 않았다면?
+
+```java
+// JSON을 수동으로 파싱
+String body = new String(reqeust.getInputStream(). readAllBytes());
+JSONObject json = new JSONObject(body);
+String username = json.getString("username");
+String password = json.getString("password");
+
+LoginReqeustDto dto = new LoginRequestDto();
+dto.setUsername(username);
+dto.setPassword(password);
+```
+
+```java
+// ObjectMapper 사용시
+LoginRequestDto requestDto = new ObjectMapper().readValue(request.InputStream, LoginRequestDto.class)
+```
+
+> ### 결론
+>
+> ObjectMapping 클래스는 Request Body의 JSON 데이터를 역직렬화(Java 객체화) 혹은 직렬화할 때 사용.
+
+<장점>
+
+-   코드 간소화
+-   오류 가능성 감소
+-   자동 타입 변환
+-   유연한 데이터 처리
