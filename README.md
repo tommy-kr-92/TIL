@@ -160,3 +160,82 @@ LoginRequestDto requestDto = new ObjectMapper().readValue(request.InputStream, L
 -   오류 가능성 감소
 -   자동 타입 변환
 -   유연한 데이터 처리
+
+> ## SecurityConfig Method
+>
+> SecurityConfig 클래스에서 @Bean으로 등록해야하는 메서드들이 왜 선언이 되어야하는지 궁금했다.
+
+### 1. AuthenticationManager
+
+```java
+@Bean
+public AuthenticationMnager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    return configuration.getAuthenticationManager();
+}
+```
+
+[역할]
+
+-   실제 인증(authentication) 프로세스를 처리하는 핵심 컴포넌트
+-   사용자의 credential(username/password)을 검증
+-   UserDetailsService 와 PasswordEncoder를 상용하여 인증 수행
+
+[Bean으로 등록하는 이유]
+
+-   JwtAuthenticationFilter에서 사용자 인증 시 필요
+-   다른 컴포넌트에서 인증 로직 필요할 때 주입받아 사용 가능
+-   Spring Security의 인증 매커니즘을 커스터마이징 할 때 필요
+
+### 2. JwtAuthenticationFilter
+
+```java
+@Bean
+public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+    filter.setAuthenticationManager(authenticationMnager(authenticationConfiguration));
+
+    return filter
+}
+```
+
+[역할]
+
+-   로그인 요청을 처리하는 필터
+-   사용자 인증 성공 시 JWT 토큰 생성
+-   인증 성공/실패에 대한 핸들링
+
+[Bean으로 등록하는 이유]
+
+-   SecurityFilterChain에 필터로 등록하기 위해
+-   AuthenticationManager를 주입받아야 함
+-   다른 컴포넌트에서 필터에 접근해야 할 때 사용
+
+### 3. JwtAuthorizationFilter
+
+```java
+@Bean
+public JwtAuthorizationFilter jwtAuthorizationFilter(){
+    return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+}
+```
+
+[역할]
+
+-   요청에 포함된 JWT 토큰의 유효성 검사
+-   요효한 토큰이면 SecurityContext에 인증 정보 설정
+-   사용자의 권한 확인
+
+[Bean으로 등록하는 이유]
+
+-   SecurityFilterChain에 필터로 등록하기 위해
+-   토큰 검증에 필요한 의존성(jwtUtil, userDetailsService) 주입
+-   다른 컴포넌트에서 재사용 가능
+
+### Bean 등록의 장점
+
+1. 의존성 주입 가능
+2. 싱글톤 객체로 관리되어 메모리 효율적
+3. 스프링의 AOP 기능 사용 가능
+4. 객체 생성과 생명주기를 스프링이 관리
+5. 컴포넌트 간 결합도를 납춤
+6. 테스트가 용이
