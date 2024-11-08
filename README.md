@@ -1,3 +1,101 @@
+# 2024-11-07
+
+## Git Convention
+
+팀이나 프로젝트에서 일관된 git 사용을 위한 규칙
+
+### 장점
+
+-   코드 리뷰 효율성 증가
+-   프로젝트 히스토리 추적 용이
+-   팀 협업 향상
+-   자동화된 문서화 가능
+
+### Commit Message Convention
+
+-   Format: `<type>(<scope>): <subject>`
+
+주요 type들:
+
+-   `feat`: 새로운 기능 추가
+-   `fix`: 버그 수정
+-   `docs`: 문서 수정
+-   `style`: 코드 포맷팅, 세미콜론 누락 등
+-   `refactor`: 코드 리펙토링
+-   `test`: 테스트코드
+-   `chore`: 빌드 업무 수정, 패키지 매니저 수정
+
+```
+feat(login): 소셜 로그인 추가
+fix(auth): 토큰 만료 오류 수정
+docs(readme): API 문서 업데이트
+```
+
+### Branch Naming Convention
+
+-   Feature 브랜치: `feature/기능명`
+-   Bugfix 브랜치: `bugfix/버그명`
+-   Hotfix 브랜치: `hotfix/긴급수정명`
+-   Release 브랜치: `release/버전명`
+
+```
+feature/user-authentication
+bugfix/login-error
+hifix/security-patch
+release/v1.2.0
+```
+
+### Git Flow 전략 주요 브랜치:
+
+-   `main`: 제품 출시 브랜치
+-   `develop`: 개발 브랜치
+-   `feature/*`: 기능 개발 브랜치
+-   `release/*`: 출시 준비 브랜치
+-   `hotfix/*`: 긴급 수정 브랜치
+
+### Pull Request(PR) Convention PR:
+
+`[타입] 제목 (#이슈번호)`
+
+PR 내용:
+
+```
+## 변경 사항
+- 구체적인 변경 내용 작성
+
+## 테스트 항목
+- 테스트한 내용들 작성
+
+## 리뷰 요청 사항
+- 중점적으로 봐야 할 부분 작성
+```
+
+### Issue Convention 이슈 제목:
+
+`[타입] 이슈 제목`
+
+이슈내용:
+
+```
+## 설명
+- 이슈에 대한 자세한 설명
+
+## 할일
+- [] 세부 작업 1
+- [] 세부 작업 2
+
+## 참고 사항
+- 관련 문서나 링크
+```
+
+### Commit Message 작성 가이드
+
+-   제목은 50자 이내로 작성
+-   본문은 72자 단위로 줄바꿈
+-   제목과 본문 사이는 한 줄 비우기
+-   현재형 시제 사용(changed->change)
+-   제목 끝에 마침표 없음
+
 # 2024-11-05
 
 ## Enum 타입 Role의 캡슐화
