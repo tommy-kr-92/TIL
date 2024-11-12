@@ -1,3 +1,58 @@
+# 2024-11-11
+
+## fastapi 에서의 파일 업로드
+
+```python
+from fastapi import FastAPI, File, UploadFile
+
+app = FastAPI()
+
+# File 객체로 받을 때
+@app.post("/files/")
+async def create_file(file: bytes = File()):
+    return {"file_size": len(file)}
+
+
+# UploadFile으로 받을 때
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile):
+    return {"filename": file.filename}
+```
+
+### byte로 받을 때
+
+파일들은 `"폼 데이터"` 형태로 업로드.  
+매개변수를 `bytes`로 선언하는 경우 **FastAPI**는 파일을 읽고 `bytes` 형태의 내용을 전달.  
+전체 내용이 메모리에 저장된다는 것을 의미. 작은 크기의 파일들에 적합.
+
+어떤 경우 UploadFile을 사용하는 것이 더 유리할 때도 있음
+
+### UploadFile
+
+`File` 매개변수를 `UploadFile` 타입으로 정의.
+
+> 사용 장점
+
+-   "스풀 파일" 사용
+    -   최대 크기 제한까지만 메모리에 저장. 초과 시 디스크에 저장
+-   이미지, 동영상, 큰 이진코드 같은 대용량 파일을 많은 메모리를 소모하지 않고 처리하기에 적합
+-   업로드 된 파일의 메타데이터를 얻을 수 있음
+-   `file-like async` 인터페이스를 가짐
+-   `file-like` object를 필요로하는 다른 라이브러리에 직접적으로 전달할 수 있는 `SpooledTemporaryFile` 객체 반환
+
+> 속성
+
+-   `filename`: 문자열(str)로 된 업로드된 파일의 파일명(ex: myimage.jpg)
+-   `content_type`: 문자열(str)로 된 파일형식(MIMI type / media type)(ex: image/jpeg)
+-   `file`: `SpooledTemporaryFile`(파일류 객체). 다른 "파일류" 객체를 필요로하는 라이브러리에 직접적으로 전달 할 수 있는 실절적이 파이썬 파일
+
+> `async` 메소드
+
+내부적인 `SpooledTemporaryFile`을 사용하여 해당하는 파일 메소드 호출
+
+-   `write(data)`: data(str 또는 bytes)를 파일에 작성
+-   ``
+
 # 2024-11-07
 
 ## Git Convention
